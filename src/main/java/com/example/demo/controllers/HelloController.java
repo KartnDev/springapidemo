@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transaction;
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,17 +20,24 @@ public class HelloController {
     @Autowired
     private UserRepository userRepository;
 
-
-
-    @GetMapping("/users")
-    private Collection<String> getAll() {
-        return List.of("one", "two", "three", "hello!");
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @RequestMapping(method = RequestMethod.GET, path = "/")
-    private Collection<User> getUsers(){
+    public Collection<User> getUsers(){
+        Collection<User> result = userRepository.loadUsers();
 
-        return userRepository.loadUsers();
+
+        return result;
     }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/")
+    public Collection<User> createUser(){
+        Collection<User> result = userRepository.loadUsers();
+
+
+        return result;
+    }
+
 
 }
